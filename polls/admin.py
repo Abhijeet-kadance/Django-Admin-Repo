@@ -9,11 +9,15 @@ class PersonAdmin(admin.ModelAdmin):
     list_display = ("last_name", "first_name","show_average")
 
     def show_average(self, obj):
+        from django.utils.html import format_html
         from django.db.models import Avg
+
         result = Grade.objects.filter(person=obj).aggregate(Avg("grade"))
         print(result)
-        return result["grade__avg"]
+        return format_html("<b><i>{}</i></b>", result["grade__avg"])
         
+    show_average.short_description = "Average Grade"
+    
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     pass
